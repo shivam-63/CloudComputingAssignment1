@@ -38,3 +38,4 @@ void main(void)
   time = second() - time;
   printf("%.3f", time);
 }
+

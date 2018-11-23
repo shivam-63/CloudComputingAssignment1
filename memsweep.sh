@@ -11,3 +11,4 @@ if [ "$SYSTEMROOT" = "C:\Windows" ] ; then
 else
 	./memsweep
 fi
+

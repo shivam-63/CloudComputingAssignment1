@@ -1,36 +1,31 @@
 #!/bin/bash
 BASEDIR=$(dirname "$0")
-EXECUTABLE="$BASEDIR/linpack"
-if [ ! -e $EXECUTABLE ] ; then
-# echo "Compiling memsweep.c (requires GNU compiler collection) "
-	gcc -O -o memsweep memsweep.c -lm
-fi
-
 declare -a results
 results=()
 # We will run the script for a maximum of 15 seconds (between 10 and 20)
 end=$((SECONDS+15))
 # We will make sure we don't enter if we have already passed 15
-while [ $SECONDS -lt $end ]; do 
+while [ $SECONDS -lt $end ]; do
 # We will use this to timeout our execution
 
-       	((time_left=$end-$SECONDS))
-        
-       	if [ "$SYSTEMROOT" = "C:\Windows" ] ; then
+    ((time_left=$end-$SECONDS))
+
 # The most important command here is timeout
 # We must stop execution after 15 seconds and we will keep running the simulation in a loop
 # Every iteration reduces the available time left
 # This way it is impossible to go over the time limit
-                result= $(timeout $time_left ./memsweep.exe | sed "s/[[:blank:]]\+/ /g" | cut -d " " -f 7) 
-        else
-            	result=$(timeout $time_left ./${EXECUTABLE} | sed "s/[[:blank:]]\+/ /g" | cut -d " " -f 7)
-        fi
-# If we had to ttimeout our execution than we will only add the result if it is not empty
 
-        if ! [ -z ${result} ] ; then
-#                echo $result    
-                results+=($result)
-        fi
+#dd does the read test of imaginary file 1000 times
+# after that sed removes all lines that have the word record in them
+# after that tr removes parentheses from the output
+# after that we have space separated values and the eighth is the one we want
+# it is in GB/s so we convert that to bytes/s
+    result=$(timeout $time_left ./$BASEDIR/read-random-resource.sh)
+# If we had to ttimeout our execution than we will only add the result if it is not empty
+    if ! [ -z ${result} ] ; then
+#echo $result
+    results+=($result)
+    fi
 done
 
 # This function sorts our array in ascending order and creates a new array from that
@@ -43,8 +38,8 @@ length=${#results[@]}
 
 if (( $length % 2 == 0 )) ; then
 # We need complicated echo to work with floating point numbers
-        echo $(echo "scale=3; (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2" | bc -l)
-else 
+echo $(echo "scale=3; (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2" | bc -l)
+else
 # If its odd we just output the middle value
-     	echo ${sorted_array[$length / 2]}
+echo ${sorted_array[$length / 2]}
 fi

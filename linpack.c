@@ -90,8 +90,8 @@ void main(void)
     printf("    Reps Time(s) DGEFA   DGESL  OVERHEAD    KFLOPS\n");
     printf("----------------------------------------------------\n");
     nreps=1;
-    while (linpack(nreps,arsize)<2.)
-	nreps*=2;
+    while(linpack(nreps, arsize)<2.0)
+     nreps*=2;
     free(mempool);
     }
 
@@ -861,3 +861,4 @@ static REAL second(void)
     {
     return ((REAL)((REAL)clock()/(REAL)CLOCKS_PER_SEC));
     }
+
