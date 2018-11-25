@@ -1,6 +1,6 @@
 #!/bin/bash
 BASEDIR=$(dirname "$0")
-EXECUTABLE="$BASEDIR/linpack"
+EXECUTABLE="$BASEDIR/memsweep"
 if [ ! -e $EXECUTABLE ] ; then
 # echo "Compiling memsweep.c (requires GNU compiler collection) "
 	gcc -O -o memsweep memsweep.c -lm
@@ -24,12 +24,13 @@ while [ $SECONDS -lt $end ]; do
                 result= $(timeout $time_left ./memsweep.exe | sed "s/[[:blank:]]\+/ /g" | cut -d " " -f 7) 
         else
             	result=$(timeout $time_left ./${EXECUTABLE} | sed "s/[[:blank:]]\+/ /g" | cut -d " " -f 7)
+		
         fi
 # If we had to ttimeout our execution than we will only add the result if it is not empty
+	
+        if ! [ -z "$result" ] ; then
+		results+=($result)
 
-        if ! [ -z ${result} ] ; then
-#                echo $result    
-                results+=($result)
         fi
 done
 
