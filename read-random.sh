@@ -20,10 +20,9 @@ while [ $SECONDS -lt $end ]; do
 # after that tr removes parentheses from the output
 # after that we have space separated values and the eighth is the one we want
 # it is in GB/s so we convert that to bytes/s
-    result=$(timeout $time_left ./$BASEDIR/read-random-resource.sh)
+    result=$(timeout $time_left ./read-random-resource.sh)
 # If we had to ttimeout our execution than we will only add the result if it is not empty
     if ! [ -z ${result} ] ; then
-#echo $result
     results+=($result)
     fi
 done
@@ -37,9 +36,9 @@ unset IFS
 length=${#results[@]}
 
 if (( $length % 2 == 0 )) ; then
-# We need complicated echo to work with floating point numbers
-echo $(echo "scale=3; (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2" | bc -l)
+	# We need complicated echo to work with floating point numbers
+	echo $(echo "scale=3; (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2" | bc -l)
 else
 # If its odd we just output the middle value
-echo ${sorted_array[$length / 2]}
+	echo ${sorted_array[$length / 2]}
 fi
