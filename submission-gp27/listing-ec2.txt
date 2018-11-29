@@ -1,0 +1,26 @@
+# This command generates a local SSH key pair. It asked for a location and I saved it into documents with the name of cloud_computing_ssh
+ssh-keygen -t rsa
+
+# Import the generated keypair into aws ec2
+aws ec2 import-key-pair --key-name "cloud_computing_key" --public-key-material file://~/gergely/Documents/EIT/cloud_computing_ssh.pub
+
+# Created a security group
+aws ec2 create-security-group --group-name devenv-sg --description "security group for cloud computing"
+
+# Authorized security group to accept all connections
+aws ec2 authorize-security-group-ingress --group-name devenv-sg --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+#Created a new instance with the cloud_computing_key 
+aws ec2 run-instances --image-id ami-034fffcc6a0063961 --security-group-ids sg-090aea1e679e83e1a --count 1 --instance-type t2.micro --key-name cloud_computing_key --query 'Instances[0].InstanceId'
+
+# Get the new instance’s ip address
+aws ec2 describe-instances --instance-ids i-0c52bc2e9fb392e69 --query 'Reservations[0].Instances[0].PublicIpAddress'
+
+#verify that SSH works
+ssh -i ~/Documents/EIT/cloud_computing_ssh ec2-user@35.156.171.122
+
+#Authorize ICMP inbound traffic
+aws ec2 authorize-security-group-ingress --group-id sg-090aea1e679e83e1a --ip-permissions IpProtocol=icmp,FromPort=-1,ToPort=-1,IpRanges='[{CidrIp=0.0.0.0/0}]'
+
+#verify that ping works
+Ping 35.156.171.122

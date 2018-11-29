@@ -1,0 +1,15 @@
+CPU benchmark questions:
+
+The Linpack Benchmark is a measure of a computer’s floating-point rate of execution. It is determined by running a computer program that solves a dense system of linear equations.
+
+Linpack benchmark measures how fast a computer can solve a dense system of linear equation(generally addition and multiplication). It results in (flop/s) which is a rate of execution, floating point operations per second.
+Paravirtualization does not affect the Linpack benchmark since no privileged operations are being executed only those operations are performed which are executed on  CPU. So Paravirtualization won’t affect the benchmark results as 	long as the virtualised  machines have dedicated access to the host’s resources.
+ 
+
+
+ 
+Memory benchmark questions:
+
+The Memsweep benchmark measures memory access time at different locations. It accesses the memory such that it hits the heap memory and then release the space. We would not expect paravirtualization itself to affect the performance tremendously, since every guest system manages its page tables on its own. The differences between the paravirtualized machines should be the result of different memory and a different clock speed of the actual CPU.
+
+Yes the memsweep measurements are consistent. The performance of Google cloud is better than AWS instance, one of the reason behind this could be that different type of CPUs are used by both the instances.
