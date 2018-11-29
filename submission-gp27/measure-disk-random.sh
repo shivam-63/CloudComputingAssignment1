@@ -7,11 +7,11 @@ end=$((SECONDS+5))
 # We will make sure we don't enter if we have already passed 15
 
 chmod +x read-random-resource.sh
-while [ $SECONDS -lt $end ]; do
+#while [ $SECONDS -lt $end ]; do
 # We will use this to timeout our execution
 
-    ((time_left=$end-$SECONDS))
-
+ #   ((time_left=$end-$SECONDS))
+	time_left=5
 # The most important command here is timeout
 # We must stop execution after 15 seconds and we will keep running the simulation in a loop
 # Every iteration reduces the available time left
@@ -27,7 +27,7 @@ while [ $SECONDS -lt $end ]; do
     if ! [ -z ${result} ] ; then
     results+=($result)
     fi
-done
+#done
 
 # This function sorts our array in ascending order and creates a new array from that
 IFS=$'\n' sorted_array=($(sort <<<"${results[*]}"))
