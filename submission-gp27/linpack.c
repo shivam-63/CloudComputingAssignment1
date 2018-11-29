@@ -72,7 +72,7 @@ void main(void)
     long    arsize2d,memreq,nreps;
     size_t  malloc_arg;
 
-    arsize= 10;
+    arsize= 1000;
 
     arsize2d = (long)arsize*(long)arsize;
     memreq=arsize2d*sizeof(REAL)+(long)arsize*sizeof(REAL)+(long)arsize*sizeof(int);
@@ -90,7 +90,7 @@ void main(void)
     printf("    Reps Time(s) DGEFA   DGESL  OVERHEAD    KFLOPS\n");
     printf("----------------------------------------------------\n");
     nreps=1;
-    while(linpack(nreps, arsize)<0.5)
+    while(linpack(nreps, arsize)<2.0)
      nreps*=2;
     free(mempool);
     }

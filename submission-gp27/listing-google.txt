@@ -1,17 +1,23 @@
 # This command generates a local SSH key pair. It asked for a location and I saved it into documents
+
 $ ssh-keygen -t rsa -f ~/Documents/EIT/cloudcomputing_ssh -C anushkagarg
 
 # Create a compute engine instance running ubuntu 16.04, provided parameter for the region 31 (eu-west4)
+
 $ gcloud compute instances create cloud-computing-engine1 --image-family ubuntu-1604-lts --image-project ubuntu-os-cloud
 
 #get medata
-gcloud compute project-info describe 
 
-#upload updated ssh username-key list 
+gcloud compute project-info describe
+
+#upload updated ssh username-key list
+
 gcloud compute ssh cloud-computing-engine1 --ssh-key-file=/users/anushkagarg/Documents/ssh-list.txt
 
 #use our local key to ssh into the compute engine
+
 gcloud compute ssh cloud-computing-engine1 --ssh-key-file=/users/anushkagarg/Documents/EIT/cloudcomputing_ssh_google
 
 #verified by ICMP
+
 PING 35.204.124.133

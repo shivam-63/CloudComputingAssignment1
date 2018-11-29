@@ -2,7 +2,7 @@
 declare -a results
 results=()
 # We will run the script for a maximum of 15 seconds (between 10 and 20)
-end=$((SECONDS+8))
+end=$((SECONDS+15))
 # We will make sure we don't enter if we have already passed 15
 while [ $SECONDS -lt $end ]; do
 # We will use this to timeout our execution
@@ -23,7 +23,6 @@ while [ $SECONDS -lt $end ]; do
 # If we had to ttimeout our execution than we will only add the result if it is not empty
 
     if ! [ -z ${result} ] ; then
-#echo $result
     results+=($result)
     fi
 done
@@ -31,16 +30,14 @@ done
 # This function sorts our array in ascending order and creates a new array from that
 IFS=$'\n' sorted_array=($(sort <<<"${results[*]}"))
 unset IFS
-#for i in ${sorted_array[@]}; do echo $i; done
 
 # We need the length of our array to find the median
 length=${#results[@]}
 
 if (( $length % 2 == 0 )) ; then
-# We need complicated echo to work with floating point numbers
-
-awk "BEGIN {printf \"%.1f\", (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2}"
+	# We need complicated echo to work with floating point numbers
+	awk "BEGIN {printf \"%.1f\", (${sorted_array[($length-1)/2]}+${sorted_array[($length-1)/2 + 1]}) / 2}"
 else
-# If its odd we just output the middle value
-echo ${sorted_array[$length / 2]}
+	# If its odd we just output the middle value
+	echo ${sorted_array[$length / 2]}
 fi
