@@ -1,30 +1,28 @@
 #!/bin/bash
 declare -a results
 results=()
+
 # We will run the script for a maximum of 15 seconds (between 10 and 20)
 end=$((SECONDS+15))
 # We will make sure we don't enter if we have already passed 15
 while [ $SECONDS -lt $end ]; do
-# We will use this to timeout our execution
+	# We will use this to timeout our execution
+	((time_left=$end-$SECONDS))
 
-    ((time_left=$end-$SECONDS))
+	# We must stop execution after 15 seconds, thus keep running the simulation in a loop with a timeout
+	# Every iteration reduces the available time left. This way it is impossible to go over the time limit
 
-# The most important command here is timeout
-# We must stop execution after 15 seconds and we will keep running the simulation in a loop
-# Every iteration reduces the available time left
-# This way it is impossible to go over the time limit
-
-#dd does the read test of imaginary file 1000 times
-# after that sed removes all lines that have the word record in them
-# after that tr removes parentheses from the output
-# after that we have space separated values and the eighth is the one we want
-# it is in GB/s so we convert that to bytes/s
+	# dd does the read test of imaginary file 1000 times.
+	# sed removes all lines that have the word record in them
+	# tr removes parentheses from the output
+	# Finally we select the eighth output elt (in GB/s) and convert it to bytes/s
     result=$(timeout $time_left dd if=/dev/zero of=test.img bs=1000 count=10 2>&1 | sed -r '/.*records /d' | tr -d '()' | awk '{printf "%.0f\n", ($8*1024)*1024*1024 }')
-# If we had to ttimeout our execution than we will only add the result if it is not empty
 
+	# If we had to ttimeout our execution than we will only add the result if it is not empty
     if ! [ -z ${result} ] ; then
-    results+=($result)
+    	results+=($result)
     fi
+    
 done
 
 # This function sorts our array in ascending order and creates a new array from that
